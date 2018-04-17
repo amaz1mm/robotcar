@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>APP</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+
+    <script>
+      var socket = io.connect();
+      socket.on('hello', function(data) {
+          //emit callback from server
+          console.log(data)
+          socket.emit('hello',"Hello from client");
+      });
+    </script>
+</body>
+
+</html>

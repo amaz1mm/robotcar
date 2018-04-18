@@ -1,12 +1,10 @@
 {
-    "name": "NodeMinimal",
-    "description": "Node JS - Express and Socket.IO Template",
+    "name": "robotcar",
+    "description": "Node-Arduino prototype",
     "author": "grassjelly",
     "dependencies": {
-        "express": "*",
         "keypress": "^0.2.1",
         "serialport": "^6.1.1",
-        "socket.io": "*"
     },
     "engine": "node >= 0.10.29"
 }

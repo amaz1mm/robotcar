@@ -1,43 +1,46 @@
-#define RIGHT_MOTOR_A 9
-#define RIGHT_MOTOR_B 6
+#include "UCMotor.h"
 
-#define LEFT_MOTOR_A 10
-#define LEFT_MOTOR_B 5
+#define MAX_SPEED 255
 
-#define SPEED 1
+UC_DCMotor leftMotor1(3, MOTOR34_64KHZ);
+UC_DCMotor rightMotor1(4, MOTOR34_64KHZ);
+UC_DCMotor leftMotor2(1, MOTOR34_64KHZ);
+UC_DCMotor rightMotor2(2, MOTOR34_64KHZ);
 
-void setup(){
-    Serial.begin(9600);
+String received_string = "";
 
-    pinMode(LEFT_MOTOR_A, OUTPUT);
-    pinMode(LEFT_MOTOR_B, OUTPUT);
-    pinMode(RIGHT_MOTOR_A, OUTPUT);
-    pinMode(RIGHT_MOTOR_B, OUTPUT);
+void setup()
+{
+    Serial.begin(115200);
+    leftMotor1.setSpeed(MAX_SPEED);
+    rightMotor1.setSpeed(MAX_SPEED);
+    leftMotor2.setSpeed(MAX_SPEED);
+    rightMotor2.setSpeed(MAX_SPEED);
+    stop();
 }
 
 void loop(){
     static long prev_time = 0;
+    while(Serial.available()){
+        char temp_char = Serial.read(); // receive a character from BT port
+        received_string.concat(temp_char); // add the received character to buffer 'received_string'
+        if(temp_char == '#'){
+            if(received_string == "m_f#")
+                moveForward();            
 
-    if(Serial.available()){
-        char command = Serial.read();
-        switch(command){
-            case 'f':
-                forward();
-                break;
-
-            case 'b':
-                reverse();
-                break;
-
-            case 'l':
-                left();
-                break;
-
-            case 'r':
-                right();
-                break;    
+            else if(received_string == "m_b#")
+                moveBackward();
+            
+            else if(received_string == "t_l#")
+                turnLeft();
+            
+            else if(received_string == "t_r#")
+                turnRight();
+            
+            Serial.println(received_string);
+            received_string = "";
         }
-
+        
         prev_time = millis();
     }
 
@@ -45,43 +48,40 @@ void loop(){
         stop();
 }
 
-void reverse(){
-    digitalWrite(LEFT_MOTOR_A, HIGH); 
-    analogWrite(LEFT_MOTOR_B, 150);
-
-    digitalWrite(RIGHT_MOTOR_A, HIGH); 
-    analogWrite(RIGHT_MOTOR_B, 150);
+void moveForward()
+{
+    leftMotor1.run(FORWARD);
+    rightMotor1.run(FORWARD);
+    leftMotor2.run(FORWARD);
+    rightMotor2.run(FORWARD);
 }
 
-
-void forward(){
-    digitalWrite(LEFT_MOTOR_A, LOW); 
-    analogWrite(LEFT_MOTOR_B, 105);
-
-    digitalWrite(RIGHT_MOTOR_A, LOW); 
-    analogWrite(RIGHT_MOTOR_B, 105);
+void moveBackward()
+{
+  leftMotor1.run(BACKWARD);
+  rightMotor1.run(BACKWARD);
+  leftMotor2.run(BACKWARD);
+  rightMotor2.run(BACKWARD);   
 }
 
-void left(){
-    digitalWrite(LEFT_MOTOR_A, HIGH); 
-    analogWrite(LEFT_MOTOR_B, 150);
-
-    digitalWrite(RIGHT_MOTOR_A, LOW); 
-    analogWrite(RIGHT_MOTOR_B, 105);
+void turnRight()
+{
+  leftMotor1.run(FORWARD);
+  rightMotor1.run(BACKWARD);
+  leftMotor2.run(FORWARD);
+  rightMotor2.run(BACKWARD);
 }
 
-void right(){
-    digitalWrite(LEFT_MOTOR_A, LOW); 
-    analogWrite(LEFT_MOTOR_B, 105);
-
-    digitalWrite(RIGHT_MOTOR_A, HIGH); 
-    analogWrite(RIGHT_MOTOR_B, 150);
+void turnLeft()
+{
+  leftMotor1.run(BACKWARD);
+  rightMotor1.run(FORWARD);
+  leftMotor2.run(BACKWARD);
+  rightMotor2.run(FORWARD);
 }
 
-void stop(){
-    digitalWrite(LEFT_MOTOR_A, LOW); 
-    analogWrite(LEFT_MOTOR_B, 0);
-
-    digitalWrite(RIGHT_MOTOR_A, LOW); 
-    analogWrite(RIGHT_MOTOR_B, 0);
+void stop()
+{
+  leftMotor1.run(5); rightMotor1.run(5);
+  leftMotor2.run(5); rightMotor2.run(5);
 }

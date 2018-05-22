@@ -1,48 +1,40 @@
-var SerialPort = require('serialport');
-var serialport = new SerialPort('/dev/rfcomm0', {
-    autoOpen: false
-});
-
+var net = require('net');
 var keypress = require('keypress');
-
-serialport.open(function(err) {
-    if (err) {
-        return console.log('Error opening port: ', err.message);
-    }
-});
-
-// The open event is always emitted
-serialport.on('open', function() {
-    // open logic
-});
 
 // make `process.stdin` begin emitting "keypress" events 
 keypress(process.stdin);
 
-// listen for the "keypress" event 
-process.stdin.on('keypress', function(ch, key) {
-    if (key && key.ctrl && key.name == 'c') {
-        process.exit();
-    }
+var net = require('net');
 
-    switch (key.name) {
-        case 'up':
-            serialport.write('f');
-            break;
-
-        case 'down':
-            serialport.write('b');
-            break;
-
-        case 'left':
-            serialport.write('l');
-            break;
-
-        case 'right':
-            serialport.write('r');
-            break;
-    }
+var client = new net.Socket();
+client.connect(2001, '192.168.1.1', function() {
+    console.log('Connected');
+	
+    process.stdin.on('keypress', function(ch, key) {
+        if (key && key.ctrl && key.name == 'c') {
+            process.exit();
+        }
+        // listen for the "keypress" event 
+        switch (key.name) {
+            case 'up':
+                client.write('m_f#');
+                break;
+    
+            case 'down':
+                client.write('m_b#');
+                break;
+    
+            case 'left':
+                client.write('t_l#');
+                break;
+    
+            case 'right':
+                client.write('t_r#');
+                break;
+        }
+    });
+    
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
 });
 
-process.stdin.setRawMode(true);
-process.stdin.resume();

@@ -46,7 +46,8 @@ void loop(){
 
     if(millis() - prev_time > 500)
         stop();
-}
+    
+
 
 void moveForward()
 {

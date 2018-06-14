@@ -8,8 +8,6 @@ UC_DCMotor leftMotor2(1, MOTOR34_64KHZ);
 UC_DCMotor rightMotor2(2, MOTOR34_64KHZ);
 
 String received_string = "";
-long prev_sensor_time=0;
-int prev_sensor_value=-1;
 
 void setup()
 {
@@ -49,22 +47,7 @@ void loop(){
     if(millis() - prev_time > 500)
         stop();
     
-    // Check sensor value every 200ms and sends only when it is different
-    if(millis() - prev_sensor_time > 200){
-        int sensor_value = analogRead(A1);
-        if (sensor_value != prev_sensor_value){
-          String message = "s_A1=";
-          message += sensor_value;
-          SendMessage(message);
-          prev_sensor_value = sensor_value;
-        }
-        prev_sensor_time = millis();
-    }
-}
 
-void SendMessage(String data) {
-  Serial.println(data);
-}
 
 void moveForward()
 {

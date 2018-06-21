@@ -1,11 +1,13 @@
-#include "UCMotor.h"
+
+#define MOTOR1EN 10
+#define MOTOR1INA 12
+#define MOTOR1INB 13
+
+#define MOTOR2EN 9
+#define MOTOR2INA 8
+#define MOTOR2INB 11
 
 #define MAX_SPEED 120
-
-UC_DCMotor leftMotor1(3, MOTOR34_64KHZ);
-UC_DCMotor rightMotor1(4, MOTOR34_64KHZ);
-UC_DCMotor leftMotor2(1, MOTOR34_64KHZ);
-UC_DCMotor rightMotor2(2, MOTOR34_64KHZ);
 
 String received_string = "";
 long prev_sensor_time=0;
@@ -13,16 +15,24 @@ int prev_sensor_value=-1;
 
 void setup()
 {
+    pinMode(MOTOR1EN, OUTPUT);
+    pinMode(MOTOR1INA, OUTPUT);
+    pinMode(MOTOR1INB, OUTPUT);
+
+    pinMode(MOTOR2EN, OUTPUT);
+    pinMode(MOTOR2INA, OUTPUT);
+    pinMode(MOTOR2INB, OUTPUT);
+
     Serial.begin(9600);
-    leftMotor1.setSpeed(MAX_SPEED);
-    rightMotor1.setSpeed(MAX_SPEED);
-    leftMotor2.setSpeed(MAX_SPEED);
-    rightMotor2.setSpeed(MAX_SPEED);
-    pinMode(13, OUTPUT);
     stop();
 }
 
 void loop(){
+    // moveForward();
+    // moveBackward();
+    // turnLeft();
+    // turnRight();
+
     static long prev_time = 0;
     while(Serial.available()){
         char temp_char = Serial.read(); // receive a character from BT port
@@ -69,38 +79,53 @@ void SendMessage(String data) {
 
 void moveForward()
 {
-    leftMotor1.run(FORWARD);
-    rightMotor1.run(FORWARD);
-    leftMotor2.run(FORWARD);
-    rightMotor2.run(FORWARD);
+    digitalWrite(MOTOR1INA, LOW);
+    digitalWrite(MOTOR1INB, HIGH);
+    analogWrite(MOTOR1EN, 255);
+
+
+    digitalWrite(MOTOR2INA, HIGH);
+    digitalWrite(MOTOR2INB, LOW);
+    analogWrite(MOTOR2EN, 255);
 }
 
 void moveBackward()
 {
-  leftMotor1.run(BACKWARD);
-  rightMotor1.run(BACKWARD);
-  leftMotor2.run(BACKWARD);
-  rightMotor2.run(BACKWARD);   
+    digitalWrite(MOTOR1INA, HIGH);
+    digitalWrite(MOTOR1INB, LOW);
+    analogWrite(MOTOR1EN, 255);
+
+
+    digitalWrite(MOTOR2INA, LOW);
+    digitalWrite(MOTOR2INB, HIGH);
+    analogWrite(MOTOR2EN, 255);
 }
 
 void turnRight()
 {
-  leftMotor1.run(FORWARD);
-  rightMotor1.run(BACKWARD);
-  leftMotor2.run(FORWARD);
-  rightMotor2.run(BACKWARD);
+    digitalWrite(MOTOR1INA, HIGH);
+    digitalWrite(MOTOR1INB, LOW);
+    analogWrite(MOTOR1EN, 255);
+
+
+    digitalWrite(MOTOR2INA, HIGH);
+    digitalWrite(MOTOR2INB, LOW);
+    analogWrite(MOTOR2EN, 255);
 }
 
 void turnLeft()
 {
-  leftMotor1.run(BACKWARD);
-  rightMotor1.run(FORWARD);
-  leftMotor2.run(BACKWARD);
-  rightMotor2.run(FORWARD);
+    digitalWrite(MOTOR1INA, LOW);
+    digitalWrite(MOTOR1INB, HIGH);
+    analogWrite(MOTOR1EN, 255);
+
+    digitalWrite(MOTOR2INA, LOW);
+    digitalWrite(MOTOR2INB, HIGH);
+    analogWrite(MOTOR2EN, 255);
 }
 
 void stop()
 {
-  leftMotor1.run(5); rightMotor1.run(5);
-  leftMotor2.run(5); rightMotor2.run(5);
+    analogWrite(MOTOR1EN, 0);
+    analogWrite(MOTOR2EN, 0);
 }

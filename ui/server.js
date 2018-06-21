@@ -27,19 +27,19 @@ process.stdin.on('keypress', function(ch, key) {
 
     switch (key.name) {
         case 'up':
-            serialport.write('f');
+            serialport.write('m_f#');
             break;
 
         case 'down':
-            serialport.write('b');
+            serialport.write('m_b#');
             break;
 
         case 'left':
-            serialport.write('l');
+            serialport.write('t_l#');
             break;
 
         case 'right':
-            serialport.write('r');
+            serialport.write('t_r#');
             break;
     }
 });

@@ -1,1 +1,1 @@
-sudo rfcomm bind rfcomm0 20:16:04:25:67:97
+sudo rfcomm bind rfcomm0 00:21:13:04:E1:1C

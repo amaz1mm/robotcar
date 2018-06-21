@@ -13,11 +13,12 @@ int prev_sensor_value=-1;
 
 void setup()
 {
-    Serial.begin(115200);
+    Serial.begin(9600);
     leftMotor1.setSpeed(MAX_SPEED);
     rightMotor1.setSpeed(MAX_SPEED);
     leftMotor2.setSpeed(MAX_SPEED);
     rightMotor2.setSpeed(MAX_SPEED);
+    pinMode(13, OUTPUT);
     stop();
 }
 
